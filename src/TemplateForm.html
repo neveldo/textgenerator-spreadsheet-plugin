@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css">
+
+    <style>
+        .width-100 {
+            width: 100%;
+        }
+
+        button:enabled, input[type="radio"]:enabled {
+            cursor: pointer;
+        }
+
+        button:disabled, input[type="radio"]:disabled {
+            cursor: default;
+        }
+        
+        .bottom {
+            position: fixed;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        .template-button {
+            padding: 3px;
+            background-color: #e0e0e0;
+            color: #656565;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 3px;
+            margin-bottom: 3px;
+            float: left;
+        }
+
+        .template-button-title {
+            float: left;
+        }
+
+        .menu {
+            border-bottom: 1px solid #D9D9D9;
+            margin-bottom: 10px;
+            background-color: #EEEEEE;
+            padding-left: 5px;
+        }
+
+        ul.tabs {
+            overflow: hidden;
+            margin: 4px 0 -1px;
+            padding: 0;
+        }
+
+        ul.tabs li {
+            list-style: none;
+            display: inline-block;
+            /*margin: 4px 2px 0;*/
+            margin: 4px 0 0 0;
+            padding: 3px 8px;
+            background-color: #eee;
+            border: 1px solid #D9D9D9;
+            border-radius: 2px 2px 0 0;
+            cursor: pointer;
+        }
+
+        ul.tabs li:hover {
+            background-color: #F5F5F5;
+        }
+
+        ul.tabs li:hover a {
+            color: #000;
+        }
+
+        ul.tabs li a {
+            color: #888;
+        }
+
+        ul.tabs li a:hover {
+            text-decoration: none;
+            color: #000;
+        }
+
+        ul.tabs li.active {
+            background-color: #fff;
+            border-bottom-color: #fff;
+            cursor: default;
+        }
+
+        ul.tabs li.active a, ul.tabs li a:focus {
+            cursor: default;
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+
+    <div class="menu">
+        <ul class="tabs">
+            <li><a href="#tab-template">Template</a></li>
+            <li><a href="#tab-doc">Documentation</a></li>
+            <li><a href="#tab-about">About</a></li>
+        </ul>
+    </div>
+
+    <div id="tab-template">
+        <form>
+            <input type="hidden" id="head-row" data-save-pref="1"/>
+
+            <div class="block">
+                <textarea class="width-100" id="template" rows="17" data-save-pref="1" autofocus></textarea>
+            </div>
+
+            <div class="block">
+                <span class="template-button-title"><b>Tags</b></span>
+                <div id="tags-list"></div>
+                <div id="declared-tags-list"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="block">
+                <span class="template-button-title"><b>Functions</b></span>
+                <div id="functions-list"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="block bottom">
+                <button class="action" id="save">Save</button>
+                <button id="cancel">Cancel</button>
+            </div>
+            
+            <div style="height:35px;">&nbsp;</div>
+
+        </form>
+    </div>
+
+    <div id="tab-doc">
+        <article class="markdown-body">
+            <h2><a id="user-content-tags" class="anchor" href="#tags" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Tags
+            </h2>
+
+            <p>The tags that appears in the template are replaced by the matching values. Example :</p>
+
+            <p>Data :</p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th align="center">my_tag</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>dolor</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>Template :</p>
+
+            <pre><code>Lorem @my_tag ipsum
+		</code></pre>
+
+            <p>Output :</p>
+
+            <pre><code>Lorem dolor ipsum
+		</code></pre>
+
+            <h2><a id="user-content-template-indentation" class="anchor" href="#template-indentation"
+                   aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Template indentation
+            </h2>
+
+            <p>Use the ';;' special marker to indent your template. This marker can be inserted at any position in the
+                template, any space characters (including tabs and line breaks) following the marker will be
+                removed.</p>
+
+            <p>Template :</p>
+
+            <pre><code>Quare hoc quidem praeceptum, cuiuscumque est. ;;
+		    ad tollendam amicitiam valet. ;;
+		        potius praecipiendum fuit. ;;
+ut eam diligentiam adhiberemus.
+		</code></pre>
+
+            <p>Output :</p>
+
+            <pre><code>Quare hoc quidem praeceptum, cuiuscumque est. ad tollendam amicitiam valet. potius praecipiendum fuit. ut eam diligentiam adhiberemus.
+		</code></pre>
+
+            <h2><a id="user-content-core-functions-" class="anchor" href="#core-functions-" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Core functions :
+            </h2>
+
+            <h3><a id="user-content-set" class="anchor" href="#set" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'set'
+            </h3>
+
+            <p>Set new tag within the template in order to be used further.</p>
+
+            <p>Data :</p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th align="center">sex</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>f</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>Template example :</p>
+
+            <pre><code>#set{@who|#if{sex == 'm'|boy|girl}};;
+		#set{@hello|#random{Hello,Goodbye,Hi}};;
+		@hello @who
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>Hi girl
+		</code></pre>
+
+            <h3><a id="user-content-if" class="anchor" href="#if" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'if'
+            </h3>
+
+            <p>Display text depending on a condition. The first parameter is the condition to check for. The second
+                parameter is returned if the condition is true. The third optional parameter is returned if the
+                condition is false.
+                Read more about the syntax for the conditions on the <a
+                        href="http://symfony.com/doc/current/components/expression_language/syntax.html">Symfony
+                    website</a>.
+                Examples :</p>
+
+            <pre><code>#if{@val == 5|the value equals 5}
+		#if{@val == 5|the value equals 5|the value doesn't equal 5}
+		#if{@val &lt; 5 or @val &gt; 15|the value is lower that 5 or greater that 15|the value is between 5 and 15}
+		#if{(@val &gt; 5 and @val &lt; 15) or (@val &gt; 10 and @val &lt; 30)|then statement ...|else statement ...}
+		</code></pre>
+
+            <h3><a id="user-content-expr" class="anchor" href="#expr" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'expr'
+            </h3>
+
+            <p>Returns the evaluated expression. Read more about the syntax for the expressions on the <a
+                    href="http://symfony.com/doc/current/components/expression_language/syntax.html">Symfony website</a>.
+                Examples :</p>
+
+            <pre><code>#expr{@age - (@current_year - @first_movie_year)}
+		#expr{(@value / @population) * 100}
+		</code></pre>
+
+            <h3><a id="user-content-filter" class="anchor" href="#filter" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'filter'
+            </h3>
+
+            <p>Filter the arguments in order to ouput a result, here are some examples :</p>
+
+            <pre><code>#filter{upperfirst|@word} will output Lorem (if @word = lorem)
+		#filter{round|@value|2} will output 56.23 (if @value = 56.23346)
+		#filter{timestamp|d/m/Y|1470339485} will output 04/08/2016
+		#filter{timestamp|Y} will output 2016
+		#filter{date|2016-08-09|Y-m-d|d/m/Y} will output 09/08/2016
+		#filter{number|@value} will output 564,564 (if @value = 564564)
+		#filter{number|@value|0|,| } will output 564 564 (if @value = 564564)
+		</code></pre>
+
+            <p>Available filters : round, ceil, floor, max, min, rand, number, lower, upper, lowerfirst, upperfirst,
+                upperwords, trim, timestamp, date.
+                For the filters directly mapped to PHP functions, you can get more information with the PHP
+                documentation.
+                Custom filters can easily be added through the FilterFunction::addFilter() method.</p>
+
+            <h3><a id="user-content-loop" class="anchor" href="#loop" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'loop'
+            </h3>
+
+            <p>Handle loop on a tag that contains an array of multiple data. Arguments list :</p>
+
+            <ul>
+                <li>1/ The tag that contains an array to loop on</li>
+                <li>2/ Maximum number of items to loop on ('*' to loop on all elements)</li>
+                <li>3/ Whether the items should be shuffled or not (true/false)</li>
+                <li>4/ Separator between each item</li>
+                <li>5/ Separator for the last item</li>
+                <li>6/ The template for each item</li>
+            </ul>
+
+            <p>Example with the tag 'tag_name' that contains a JSON array :</p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th align="center">tag_name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>[{"name": "Bill"}, {"name": "Bob"}, {"name": "John"}]</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <pre><code>Hello #loop{@tag_name|*|true|, | and |dear @name}.
+		</code></pre>
+
+            <p>It will output : <code>Hello dear John, dear Bob and dear Bill.</code></p>
+
+            <h3><a id="user-content-random" class="anchor" href="#random" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'random'
+            </h3>
+
+            <p>Return randomly one of the arguments</p>
+
+            <p>Template example :</p>
+
+            <pre><code>#random{first option|second option|third option}
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>second option
+		</code></pre>
+
+            <h3><a id="user-content-prandom" class="anchor" href="#prandom" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'prandom'
+            </h3>
+
+            <p>Return randomly one of the arguments, taking account of the probability set to each value. In the example
+                below, the first parameter 'one' will have 80% of chance to be output.</p>
+
+            <p>Template example :</p>
+
+            <pre><code>#random{80:first option|10:second option|10:third option}
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>first option
+		</code></pre>
+
+            <h3><a id="user-content-shuffle" class="anchor" href="#shuffle" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'shuffle'
+            </h3>
+
+            <p>Return the arguments shuffled. The first argument is the separator between each others.</p>
+
+            <p>Template example :</p>
+
+            <pre><code>#shuffle{ |one|two|three}
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>two three one
+		</code></pre>
+
+            <h3><a id="user-content-choose" class="anchor" href="#choose" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>'choose'
+            </h3>
+
+            <p>Return the chosen argument among the list. The first argument is the ID of the argument to output
+                (starting from 1).</p>
+
+            <p>Data :</p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th align="center">my_choice</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>Template example :</p>
+
+            <pre><code>#choose{1|one|two|three} #choose{@my_choice|one|two|three}
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>one two
+		</code></pre>
+
+            <p>For instance, 'choose' function can be used in combination with 'set' function :</p>
+
+            <p>Template example :</p>
+
+            <pre><code>#set{my_choice|#random{1,2,3}};;
+		Lorem #choose{@my_choice|one|two|three} ipsum #choose{@my_choice|first|second|third}
+		</code></pre>
+
+            <p>Output example :</p>
+
+            <pre><code>Lorem two ipsum second
+		</code></pre>
+
+            <h2><a id="user-content-complete-example-" class="anchor" href="#complete-example-" aria-hidden="true">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Complete example :
+            </h2>
+
+            <p>Template :</p>
+
+            <pre><code>#set{@pronoun|#if{@sex == 'm'|He|She}};;
+@firstname @lastname is an @nationality #if{@sex == 'm'|actor|actress} of @age years old. ;;
+@pronoun was born in @birthdate in @birth_city (@birth_country). ;;
+#shuffle{ |;;
+    #random{Throughout|During|All along} #if{sex == 'm'|his|her} career, #random{@pronoun|@lastname} was nominated @nominations_number time#if{@nominations_number &gt; 1|s} for the oscars and has won @awards_number time#if{@awards_number &gt; 1|s}.|;;
+    #if{@awards_number &gt; 1 and (@awards_number / @nominations_number) &gt;= 0.5|@lastname is accustomed to win oscars.}|;;
+    @firstname @lastname first movie, "@first_movie_name", was shot in @first_movie_year (at #expr{@age - (#filter{timestamp|Y} - @first_movie_year)} years old).|;;
+    One of #if{@sex == 'm'|his|her} most #random{famous|important|major} #random{film|movie} is @famous_movie_name and has been released in @famous_movie_year. ;;
+        #prandom{20:|80:Indeed, }@famous_movie_name #random{earned|gained|made|obtained} $#filter{number|@famous_movie_earn} #random{worldwide|#random{across|around} the world}. ;;
+        #loop{@other_famous_movies|*|true|, | and |@name (@year)} are some other great movies from @lastname.;;
+}
+</code></pre>
+
+            <p>Data :</p>
+
+            <table>
+                <thead>
+                <tr>
+                    <th align="center">firstname</th>
+                    <th align="center">lastname</th>
+                    <th align="center">birthdate</th>
+                    <th align="center">age</th>
+                    <th align="center">sex</th>
+                    <th align="center">nationality</th>
+                    <th align="center">birth_city</th>
+                    <th align="center">birth_country</th>
+                    <th align="center">awards_number</th>
+                    <th align="center">nominations_number</th>
+                    <th align="center">movies_number</th>
+                    <th align="center">first_movie_name</th>
+                    <th align="center">first_movie_year</th>
+                    <th align="center">famous_movie_name</th>
+                    <th align="center">famous_movie_year</th>
+                    <th align="center">famous_movie_earn</th>
+                    <th align="center">other_famous_movies</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Leonardo</td>
+                    <td>DiCaprio</td>
+                    <td>November 11, 1974</td>
+                    <td>41</td>
+                    <td>m</td>
+                    <td>American</td>
+                    <td>Hollywood</td>
+                    <td>US</td>
+                    <td>1</td>
+                    <td>6</td>
+                    <td>37</td>
+                    <td>Critters 3</td>
+                    <td>1991</td>
+                    <td>Titanic</td>
+                    <td>1997</td>
+                    <td>2185372302</td>
+                    <td>[{"name": "Catch Me If You Can", "year": "2002"}, {"name": "Shutter Island", "year": "2010"}, {"name": "Inception", "year": "2010"}]</td>
+                </tr>
+                <tr>
+                    <td>Jodie</td>
+                    <td>Foster</td>
+                    <td>November 19, 1962</td>
+                    <td>53</td>
+                    <td>f</td>
+                    <td>American</td>
+                    <td>Los Angeles</td>
+                    <td>US</td>
+                    <td>2</td>
+                    <td>4</td>
+                    <td>75</td>
+                    <td>My Sister Hank</td>
+                    <td>1972</td>
+                    <td>Taxi Driver</td>
+                    <td>1976</td>
+                    <td>28262574</td>
+                    <td>[{"name": "The Silence of the Lambs", "year": "1991"}, {"name": "Contact", "year": ""}, {"name": "The Accused", "year": "1988"}]</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>Output :</p>
+
+            <blockquote>
+                <p>Leonardo DiCaprio is an American actor of 41 years old. He was born in November 11, 1974 in Hollywood
+                    (US). One of his most famous film is Titanic and has been released in 1997. Indeed, Titanic obtained
+                    $2,185,372,302 around the world. Catch Me If You Can (2002), Inception (2010) and Shutter Island
+                    (2010) are some other great movies from DiCaprio. Leonardo DiCaprio first movie, "Critters 3", was
+                    shot in 1991 (at 16 years old). All along his career, He was nominated 6 times for the oscars and
+                    has won 1 time.</p>
+
+                <p>Jodie Foster is an American actress of 51 years old. She was born in November 19, 1962 in Los Angeles
+                    (US). Foster is accustomed to win oscars. One of her most important film is Taxi Driver and has been
+                    released in 1976. Indeed, Taxi Driver obtained $28,262,574 worldwide. The Accused (1988) and The
+                    Silence of the Lambs (1991) are some other great movies from Foster. Jodie Foster first movie, "My
+                    Sister Hank", was shot in 1972 (at 7 years old). Throughout her career, Foster was nominated 4 times
+                    for the oscars and has won 2 times.</p>
+            </blockquote>
+
+        </article>
+    </div>
+
+    <div id="tab-about">
+    <p>Plugin created by Vincent Brouté : <a href="https://github.com/neveldo">GitHub</a> / <a href="https://twitter.com/VincentBroute">Twitter</a></p>
+    <p>TextGenerator is also available as a <a href="https://github.com/neveldo/TextGenerator">PHP package</a>.</p>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    $(function () {
+
+        // Restore user preference for the current column
+        google.script.run.withSuccessHandler(function (preferences) {
+            if (typeof preferences === 'object') {
+                $("[data-save-pref='1']").each(function () {
+                    var $this = $(this),
+                            id = $this.attr('id');
+                    if (typeof preferences[id] !== 'undefined') {
+                        $this.val(preferences[id]);
+                    }
+                });
+
+                updateAvailableTags();
+            }
+        }).getPreferences();
+
+        // Update the list of available tags
+        function updateAvailableTags() {
+            var headRow = isNaN(parseInt($('#head-row').val())) ? 1 : Math.max(1, parseInt($('#head-row').val()));
+
+            google.script.run.withSuccessHandler(function (tags) {
+                for (var tagName in tags) {
+                    addButton(
+                            $('#tags-list'),
+                            tags[tagName]['tag'],
+                            '@' + tags[tagName]['tag'],
+                            tags[tagName]['tag'].length + 1,
+                            tags[tagName]['tag'].length + 1
+                    );
+                }
+            }).getAvailableTags(Math.max(1, headRow));
+        }
+
+        $('#template').on('change', function () {
+
+        });
+
+        // Update the list of functions
+        (function () {
+            var functions = [
+                {
+                    'label': 'set',
+                    'value': '#set{@tag_name|value}',
+                    'caretBeginPos': 5,
+                    'caretEndPos': 14
+                },
+                {
+                    'label': 'if',
+                    'value': '#if{condition|condition_ok|condition_nok}',
+                    'caretBeginPos': 4,
+                    'caretEndPos': 13
+                },
+                {
+                    'label': 'expr',
+                    'value': '#expr{expression}',
+                    'caretBeginPos': 6,
+                    'caretEndPos': 16
+                },
+                {
+                    'label': 'filter',
+                    'value': '#filter{filter_name|value}',
+                    'caretBeginPos': 8,
+                    'caretEndPos': 19
+                },
+                {
+                    'label': 'loop',
+                    'value': '#loop{@tag_name|*|false|separator|last_separator|template}',
+                    'caretBeginPos': 6,
+                    'caretEndPos': 15
+                },
+                {
+                    'label': 'random',
+                    'value': '#random{options}',
+                    'caretBeginPos': 8,
+                    'caretEndPos': 15
+                },
+                {
+                    'label': 'prandom',
+                    'value': '#prandom{options}',
+                    'caretBeginPos': 9,
+                    'caretEndPos': 16
+                },
+                {
+                    'label': 'shuffle',
+                    'value': '#shuffle{ |options}',
+                    'caretBeginPos': 11,
+                    'caretEndPos': 18
+                },
+                {
+                    'label': 'choose',
+                    'value': '#choose{choice|options}',
+                    'caretBeginPos': 8,
+                    'caretEndPos': 14
+                }
+            ];
+            for (var i = 0; i < functions.length; ++i) {
+                addButton(
+                        $('#functions-list'),
+                        functions[i]['label'],
+                        functions[i]['value'],
+                        functions[i]['caretBeginPos'],
+                        functions[i]['caretEndPos'],
+                        functions[i]['tooltip']
+                );
+            }
+        })();
+
+        // Add a template button
+        function addButton($container, label, value, caretBeginPos, caretEndPos) {
+            $button = $('<span>')
+                    .addClass('template-button')
+                    .text(label)
+                    .attr('data-value', value)
+                    .on('click', function () {
+                        // Append the selected tag to the template
+                        var $template = $('#template'),
+                                tplCaretBeginPos = $template[0].selectionStart,
+                                tplCaretEndPos = $template[0].selectionEnd,
+                                templateContent = $template.val(),
+                                firstPart = templateContent.substring(0, tplCaretBeginPos);
+
+                        $template.val(firstPart + $(this).attr('data-value') + templateContent.substring(tplCaretEndPos));
+                        setSelectionRange($template.get(0), firstPart.length + caretBeginPos, firstPart.length + caretEndPos);
+                    });
+
+            $container.append($button);
+        }
+
+        // Handle user declared tags
+        setInterval(function () {
+            var templateTags = [],
+                    buttonTags = [],
+                    matches = $('#template').val().match(/#set\{@(.*?)(:?\|)/g);
+
+            if (matches !== null) {
+                for (var i = 0; i < matches.length; i++) {
+                    templateTags.push(matches[i].replace('|', '').replace('#set{', ''));
+                }
+            }
+
+            $('#declared-tags-list span[data-value]').each(function () {
+                buttonTags.push($(this).attr('data-value'));
+            });
+
+            var tagsToDelete = buttonTags.diff(templateTags),
+                    tagsToAdd = templateTags.diff(buttonTags);
+
+            for (var i = 0; i < tagsToDelete.length; ++i) {
+                $('#declared-tags-list span[data-value="' + tagsToDelete[i] + '"]').remove();
+            }
+            for (var i = 0; i < tagsToAdd.length; ++i) {
+                addButton($('#declared-tags-list'), tagsToAdd[i].substring(1), tagsToAdd[i], tagsToAdd[i].length, tagsToAdd[i].length);
+            }
+
+        }, 3000);
+
+        // Save template
+        $('#save').on('click', function () {
+            var $template = $('#template');
+            google.script.run.withSuccessHandler(function () {
+                google.script.run.withSuccessHandler(function () {
+                    google.script.host.close();
+                }).updateTemplateDialogStatus('closed');
+            }).savePreference($template.attr('id'), $template.val());
+
+            return false;
+        });
+
+        // cancel
+        $('#cancel').on('click', function () {
+            google.script.run.withSuccessHandler(function () {
+                google.script.host.close();
+            }).updateTemplateDialogStatus('closed');
+            return false;
+        });
+
+        // Handle tabs (from http://www.jacklmoore.com/notes/jquery-tabs/)
+        $('ul.tabs').each(function () {
+            var $active, $content, $links = $(this).find('a');
+
+            $active = $($links.filter('[href="' + location.hash + '"]')[0] || $links[0]);
+            $active.parent().addClass('active');
+
+            $content = $($active[0].hash);
+
+            $links.not($active).each(function () {
+                $(this.hash).hide();
+            });
+
+            $(this).on('click', 'li', function (e) {
+                $active.parent().removeClass('active');
+                $content.hide();
+
+                $active = $(this).children().first();
+                $content = $($(this).children().get(0).hash);
+
+                $active.parent().addClass('active');
+                $content.show();
+                e.preventDefault();
+            });
+        });
+
+        // helper function for the focus on textarea
+        function setSelectionRange(input, selectionStart, selectionEnd) {
+            if (input.setSelectionRange) {
+                input.focus();
+                input.setSelectionRange(selectionStart, selectionEnd);
+            }
+            else if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', selectionEnd);
+                range.moveStart('character', selectionStart);
+                range.select();
+            }
+        }
+
+        // array diff function
+        Array.prototype.diff = function (a) {
+            return this.filter(function (i) {
+                return a.indexOf(i) < 0;
+            });
+        };
+    });
+
+</script>
+</body>
+</html>

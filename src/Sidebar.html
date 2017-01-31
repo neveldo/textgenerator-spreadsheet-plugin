@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery.tipsy/1.0.3/jquery.tipsy.min.css" rel="stylesheet">
+
+    <style>
+        .branding-below {
+            bottom: 56px;
+            top: 0;
+        }
+
+        .branding-text {
+            left: 7px;
+            position: relative;
+            top: 3px;
+        }
+
+        .col-contain {
+            overflow: hidden;
+        }
+
+        .col-one {
+            float: left;
+            width: 50%;
+        }
+
+        .logo {
+            vertical-align: middle;
+        }
+
+        .radio-spacer {
+            height: 20px;
+        }
+
+        .width-100 {
+            width: 100%;
+        }
+
+        .bottom {
+            position: fixed;
+            background-color: #fff;
+        }
+
+        button:enabled, input[type="radio"]:enabled {
+            cursor: pointer;
+        }
+
+        button:disabled, input[type="radio"]:disabled {
+            cursor: default;
+        }
+
+        .small-input {
+            width: 50px;
+        }
+        
+        .hidden {
+
+            display: none;
+        }
+
+        #template {
+            cursor: pointer;
+        }
+
+        /* Absolute Center Spinner from https://codepen.io/MattIn4D/pen/LiKFC */
+        .loading {
+            position: fixed;
+            z-index: 200;
+            left: 50%;
+            top: 50%;
+            display: none;
+        }
+
+        .loading:not(:required):after {
+            content: '';
+            display: block;
+            font-size: 10px;
+            width: 1em;
+            height: 1em;
+            margin-top: -0.5em;
+            -webkit-animation: spinner 1500ms infinite linear;
+            -moz-animation: spinner 1500ms infinite linear;
+            -ms-animation: spinner 1500ms infinite linear;
+            -o-animation: spinner 1500ms infinite linear;
+            animation: spinner 1500ms infinite linear;
+            border-radius: 0.5em;
+            -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+            box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+        }
+
+        @-webkit-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @-moz-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @-o-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar branding-below">
+    <form>
+        <div class="block">
+
+            <label for="template">Template for the column <b><span id="column-name"></span></b></label>
+            <textarea class="width-100" id="template" rows="5" data-save-pref="1" readonly></textarea>
+        </div>
+
+        <div class="block">
+            <div>
+                <input type="radio" name="fill" id="radio-fill-all" checked="checked" value="1"/>
+                <label for="radio-fill-all">Fill all the cells</label>
+
+            </div>
+            <div>
+                <input type="radio" name="fill" id="radio-fill-blank" value="0"/>
+                <label for="radio-fill-blank">Fill only the blank cells</label>
+            </div>
+        </div>
+
+        <div class="block col-contain">
+            <div class="col-one">
+                <label for="head-row">Head row</label>
+                <input type="number" min="1" id="head-row" value="1" class="small-input" data-save-pref="1"/>
+            </div>
+            <div>
+                <label for="first-data-row">First data row</label>
+                <input type="number" min="1" id="first-data-row" value="2" class="small-input" data-save-pref="1"/>
+            </div>
+        </div>
+
+        <div class="block">
+            <label for="api">API URL</label>
+            <input type="text" class="width-100" id="api" value="http://www.vincentbroute.fr/text-generator/api.php"
+                   data-save-pref="1"/>
+        </div>
+        <div class="block">
+            <label for="template">Number of generations by API call</label>
+            <input type="number" min="1" id="rows-by-query" value="50" class="small-input" data-save-pref="1"/>
+        </div>
+
+        <div class="block">
+            <button class="action" id="run-generation">Generate</button>
+            <button id="stop-generation">Stop</button>
+        </div>
+
+    </form>
+</div>
+
+<div class="loading"></div>
+
+<div class="sidebar bottom">
+    <span class="gray branding-text">TextGenerator - <a href="https://github.com/neveldo/TextGenerator">Help & documentation</a></span>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tipsy/1.0.3/jquery.tipsy.js"></script>
+<script>
+    $(function () {
+
+        var intervalId = null;
+
+        // Handle template dialog
+        $('#template').on('click', function () {
+            google.script.run.withSuccessHandler(function () {
+                google.script.run.withSuccessHandler(function () {
+                    intervalId = setInterval(function () {
+                        google.script.run.withSuccessHandler(function (dialogStatus) {
+                            if (dialogStatus === 'closed' && intervalId !== null) {
+                                clearInterval(intervalId);
+                                intervalId = null;
+                                restoreTemplate();
+                            }
+                        }).getTemplateDialogStatus();
+
+                    }, 1000);
+                }).updateTemplateDialogStatus('display');
+            }).showTemplateForm();
+        });
+
+        // Allow to clear timeout if the user closed the dialoag without saving the template
+        $('.sidebar').on('click', function () {
+            if (intervalId !== null) {
+                clearInterval(intervalId);
+                intervalId = null;
+                restoreTemplate();
+            }
+        });
+
+        // Restore template value from saved preferences
+        function restoreTemplate() {
+            google.script.run.withSuccessHandler(function (preferences) {
+                if (typeof preferences === 'object') {
+                    var $template = $('#template'),
+                            id = $template.attr('id');
+                    if (typeof preferences[id] !== 'undefined') {
+                        $template.val(preferences[id]);
+                    }
+                }
+            }).getPreferences();
+        }
+
+        // Display info on API url input
+        $('#api').tipsy({
+            'opacity': 1,
+            'html': true,
+            'title': function () {
+                return 'Warning, this API URL is just for <b>testing purpose</b>.<br />For production, please install a TextGenerator API on your own server (more info on the Github project page).';
+            }
+        });
+        function setApiInfo() {
+            var $api = $('#api'),
+                    apiUrl = 'http://www.vincentbroute.fr/text-generator/api.php';
+
+            if ($api.val() === apiUrl) {
+                $api.tipsy('enable').css('background-color', '#F6FCAC');
+            } else {
+                $api.tipsy('disable').css('background-color', '#fff');
+            }
+        }
+
+        setApiInfo();
+        $('#api').on('change', setApiInfo);
+
+        // Restore user preference for the current column
+        google.script.run.withSuccessHandler(function (preferences) {
+            if (typeof preferences === 'object') {
+                $("[data-save-pref='1']").each(function () {
+                    var $this = $(this),
+                            id = $this.attr('id');
+                    if (typeof preferences[id] !== 'undefined') {
+                        $this.val(preferences[id]);
+                    }
+                });
+
+                //updateAvailableTags();
+                setApiInfo();
+            }
+        }).getPreferences();
+
+        // Save preference on user modification
+        $("[data-save-pref='1']").each(function () {
+            $(this).on('change', function () {
+                var $this = $(this);
+                google.script.run.savePreference($this.attr('id'), $this.val());
+            });
+        });
+
+        // Run the text generation on the active column
+        $('#run-generation').on('click', function () {
+            $(this).attr('disabled', 'disabled');
+            $('.loading').css('display', 'block');
+
+            var rowsByQuery =isNaN(parseInt($('#rows-by-query').val())) ? 1 : Math.max(1, parseInt($('#rows-by-query').val())),
+                    fillAll = Boolean(parseInt($("input[name='fill']:checked").val())),
+                    apiUrl = $('#api').val(),
+                    template = $('#template').val(),
+                    headRow = isNaN(parseInt($('#head-row').val())) ? 1 : Math.max(1, parseInt($('#head-row').val())),
+                    firstDataRow = isNaN(parseInt($('#first-data-row').val())) ? 1 : Math.max(1, parseInt($('#first-data-row').val()));
+
+            google.script.run.withSuccessHandler(function (result) {
+                if (result === true) {
+                    result = '<span>The text generation ended sucessfully.</span>';
+                } else {
+                    result = '<span class="error">' + result + '</span>';
+                }
+                
+                $('#run-generation').removeAttr('disabled');
+                $('.loading').css('display', 'none');
+            }).runTextGeneration(apiUrl, template, rowsByQuery, headRow, firstDataRow, fillAll);
+
+            return false;
+        });
+
+        // Stop running generation
+        $('#stop-generation').on('click', function () {
+            google.script.run.updateStatus('stop');
+            return false;
+        });
+        
+        // Update active column name
+        google.script.run.withSuccessHandler(function (columnName) {
+            $('#column-name').text(columnName);
+        }).getActiveColumnName();
+
+        // Display logs from server into client console
+        // To be disabled in production mode ...
+        /*setInterval(function () {
+            google.script.run.withSuccessHandler(function (logs) {
+                for (var id in logs) {
+                    console.log(logs[id]);
+                }
+            }).popLogs();
+        }, 1000);*/
+
+    });
+
+</script>
+</body>
+</html>
